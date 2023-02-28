@@ -1,16 +1,18 @@
 import os
 
-# tg bot token
-TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
+AI_TOKEN = os.getenv("OPENAI_API_KEY")
+if AI_TOKEN is None:
+    raise EnvironmentError("Missing env variable AI_TOKEN")
 
-# Check the token is set
+
+class CHATGPT_CONFIG:
+    MODEL = "text-davinci-003"
+    TEMPERATURE = 0.8
+    MAX_TOKENS = 300
+    FREQUENCY_PENALTY = 0
+    PRESENCE_PENALTY = 0.6
+
+
+TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
 if TELEGRAM_TOKEN is None:
     raise EnvironmentError("Missing env variable TELEGRAM_TOKEN")
-
-# chat rooms in telegram that bot would response
-VALID_CHAT_ID = []
-VALID_CHAT_ID.append(os.getenv('CHAT_ID_GROUP_MAIN'))
-VALID_CHAT_ID.append(os.getenv('CHAT_ID_GROUP_TEST'))
-VALID_CHAT_ID.append(os.getenv('CHAT_ID_DM'))
-if len(VALID_CHAT_ID) == 0 or VALID_CHAT_ID is None:
-    raise EnvironmentError("Missing env variable Chat ID")

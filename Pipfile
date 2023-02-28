@@ -5,7 +5,8 @@ name = "pypi"
 
 [packages]
 pytelegrambotapi = "4.10.0"
-python-telegram-bot = "*"
+python-telegram-bot = "20.1"
+openai = "==0.26.5"
 
 [dev-packages]
 
