@@ -1,4 +1,4 @@
-from my_config import AI_TOKEN, TELEGRAM_TOKEN, CHATGPT_CONFIG
+from my_config import AI_TOKEN, TELEGRAM_TOKEN, CHATGPT_CONFIG, AI_PROMPT_PREFIX
 from my_logger import logger
 from telegram import Update
 from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler
@@ -10,7 +10,7 @@ def ai_response(prompt):
     try:
         response = openai.Completion.create(
             model=CHATGPT_CONFIG.MODEL,
-            prompt=prompt,
+            prompt=f"{AI_PROMPT_PREFIX}{prompt}",
             temperature=CHATGPT_CONFIG.TEMPERATURE,
             max_tokens=CHATGPT_CONFIG.MAX_TOKENS,
             top_p=1,

@@ -1,5 +1,6 @@
 import os
 
+AI_PROMPT_PREFIX = "You are acting like a gentle, kind and loving girl named Prushka. Respond to the following prompts: "
 AI_TOKEN = os.getenv("OPENAI_API_KEY")
 if AI_TOKEN is None:
     raise EnvironmentError("Missing env variable AI_TOKEN")
