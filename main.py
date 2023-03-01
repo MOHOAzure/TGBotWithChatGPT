@@ -34,10 +34,9 @@ def ai_draw(prompt):
     except openai.error.OpenAIError as e:
         logger.error(e.http_status)
         logger.error(e.error)
-        response = e.error.message
-        if response is None:
-            response = ERROR_MSG
-        return response
+        err_msg = f"Prompt: {prompt}. {ERROR_MSG}. {e.error.message}"
+        logger.error(err_msg)
+        return err_msg
     except Exception as e:
         logger.error(f"ChatGPT fail: {str(e)}")
         return ERROR_MSG
