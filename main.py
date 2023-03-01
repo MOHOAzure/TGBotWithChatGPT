@@ -1,4 +1,4 @@
-from my_config import AI_TOKEN, TELEGRAM_TOKEN, CHATGPT_CONFIG, AI_PROMPT_PREFIX
+from my_config import ERROR_MSG, AI_TOKEN, TELEGRAM_TOKEN, CHATGPT_CONFIG, AI_PROMPT_PREFIX, WAIT_DRAWING
 from my_logger import logger
 from telegram import Update
 from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler
@@ -6,7 +6,7 @@ import openai
 openai.api_key = AI_TOKEN
 
 
-def ai_response(prompt):
+def ai_say(prompt):
     try:
         response = openai.Completion.create(
             model=CHATGPT_CONFIG.MODEL,
@@ -20,20 +20,49 @@ def ai_response(prompt):
         return response['choices'][0]['text'].strip()
     except Exception as e:
         logger.error(f"ChatGPT fail: {str(e)}")
-        return "Something's wrong. Try again"
+        return ERROR_MSG
 
 
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+def ai_draw(prompt):
+    try:
+        response = openai.Image.create(
+            prompt=prompt,
+            n=1,
+            size="512x512"#"1024x1024"
+        )
+        return response['data'][0]['url']
+    except openai.error.OpenAIError as e:
+        logger.error(e.http_status)
+        logger.error(e.error)
+    except Exception as e:
+        logger.error(f"ChatGPT fail: {str(e)}")
+        return ERROR_MSG
+    
+async def say(update: Update, context: ContextTypes.DEFAULT_TYPE):
     logger.debug(context.args)
     prompt = ' '.join(context.args)
-    response = ai_response(prompt)
+    response = ai_say(prompt)
     await context.bot.send_message(chat_id=update.effective_chat.id, text=response)
 
+async def draw(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    logger.debug(context.args)
+    prompt = ' '.join(context.args)
+        
+    await context.bot.send_message(chat_id=update.effective_chat.id, text=f"{WAIT_DRAWING}: {prompt}")
+    
+    response = ai_draw(prompt)
+    
+    if ERROR_MSG in response:
+        await context.bot.send_message(chat_id=update.effective_chat.id, text=response)
+    else:
+        await context.bot.send_photo(chat_id=update.effective_chat.id, photo=response)
 
 def start_bot():
     application = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
-    start_handler = CommandHandler('s', start)
-    application.add_handler(start_handler)
+    say_handler = CommandHandler('s', say)
+    draw_handler = CommandHandler('d', draw)
+    application.add_handler(say_handler)
+    application.add_handler(draw_handler)
     application.run_polling()
 
 
