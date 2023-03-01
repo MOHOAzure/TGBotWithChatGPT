@@ -34,6 +34,10 @@ def ai_draw(prompt):
     except openai.error.OpenAIError as e:
         logger.error(e.http_status)
         logger.error(e.error)
+        response = e.error.message
+        if response is None:
+            response = ERROR_MSG
+        return response
     except Exception as e:
         logger.error(f"ChatGPT fail: {str(e)}")
         return ERROR_MSG
@@ -52,7 +56,7 @@ async def draw(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     response = ai_draw(prompt)
     
-    if ERROR_MSG in response:
+    if response is None or ERROR_MSG in response:
         await context.bot.send_message(chat_id=update.effective_chat.id, text=response)
     else:
         await context.bot.send_photo(chat_id=update.effective_chat.id, photo=response)
