@@ -11,5 +11,4 @@ openai = "==0.26.5"
 [dev-packages]
 
 [requires]
-python_version = "3.8"
-python_full_version = "3.8.10"
+python_version = "3"
