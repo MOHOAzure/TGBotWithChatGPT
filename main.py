@@ -16,7 +16,7 @@ def reduce_prompt(str, max_len=2900):
 
 
 def ai_say(prompt):
-    prompt = reduce_prompt(f"{prompt}.{AI_CHARACTERISTICS}")
+    prompt = reduce_prompt(f"{AI_CHARACTERISTICS}{prompt}")
     try:
         response = openai.Completion.create(
             model=CHATGPT_CONFIG.MODEL,

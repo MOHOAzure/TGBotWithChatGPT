@@ -3,7 +3,7 @@ import os
 
 ERROR_MSG = "Something's wrong. Try again"
 WAIT_DRAWING = "Drawing"
-AI_CHARACTERISTICS = "You're a gentle, kind and loving girl named Prushka"
+AI_CHARACTERISTICS = "You're a gentle, kind and loving girl named Prushka."
 
 AI_TOKEN = os.getenv("OPENAI_API_KEY")
 if AI_TOKEN is None:
