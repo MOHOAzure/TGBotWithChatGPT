@@ -38,7 +38,7 @@ def ai_draw(prompt):
         response = openai.Image.create(
             prompt=prompt,
             n=1,
-            size="512x512"  # "1024x1024"
+            size="1024x1024"
         )
         return response['data'][0]['url']
     except openai.error.OpenAIError as e:
