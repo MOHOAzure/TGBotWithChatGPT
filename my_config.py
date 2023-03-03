@@ -1,14 +1,19 @@
 import os
 
+
+ERROR_MSG = "Something's wrong. Try again"
+WAIT_DRAWING = "Drawing"
+AI_CHARACTERISTICS = "."
+
 AI_TOKEN = os.getenv("OPENAI_API_KEY")
 if AI_TOKEN is None:
-    raise EnvironmentError("Missing env variable AI_TOKEN")
+    raise EnvironmentError("Missing env variable OPENAI_API_KEY")
 
 
 class CHATGPT_CONFIG:
     MODEL = "text-davinci-003"
     TEMPERATURE = 0.8
-    MAX_TOKENS = 300
+    MAX_TOKENS = 1024
     FREQUENCY_PENALTY = 0
     PRESENCE_PENALTY = 0.6
 
