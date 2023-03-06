@@ -83,12 +83,22 @@ async def draw(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await context.bot.send_photo(chat_id=update.effective_chat.id, photo=response)
 
 
+async def forget(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    logger.debug(update)
+    global conversation_history
+    conversation_history = ""
+    response = "(´*_*`)"
+    await context.bot.send_message(chat_id=update.effective_chat.id, text=response)
+
+
 def start_bot():
     application = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
     say_handler = CommandHandler('s', say)
     draw_handler = CommandHandler('d', draw)
     application.add_handler(say_handler)
     application.add_handler(draw_handler)
+    forget_handler = CommandHandler('forget', forget)
+    application.add_handler(forget_handler)
     application.run_polling()
 
 
