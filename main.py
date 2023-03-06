@@ -62,6 +62,8 @@ async def say(update: Update, context: ContextTypes.DEFAULT_TYPE):
     prompt = f"{conversation_history}{username}: {prompt}\n"
 
     response = ai_say(prompt)
+    if response is None or response == "":
+        response = "(´-﹏-`)"
 
     # update the conversation history
     conversation_history += f"{response}\n"
