@@ -8,6 +8,11 @@ openai.api_key = AI_TOKEN
 conversation_history = ""
 
 
+def reduce_conversation_history(str, max_len=500):
+    if len(str) > max_len:
+        str = str[-max_len:]
+    return str
+
 def reduce_prompt(str, max_len=2900):
     """ OpenAI accepts up to 3000 words (more or less) """
     if len(str) > max_len:
@@ -23,7 +28,6 @@ def ai_say(prompt):
             prompt=prompt,
             temperature=CHATGPT_CONFIG.TEMPERATURE,
             max_tokens=CHATGPT_CONFIG.MAX_TOKENS,
-            top_p=1,
             frequency_penalty=CHATGPT_CONFIG.FREQUENCY_PENALTY,
             presence_penalty=CHATGPT_CONFIG.PRESENCE_PENALTY
         )
@@ -57,6 +61,8 @@ async def say(update: Update, context: ContextTypes.DEFAULT_TYPE):
     global conversation_history
     username = update.message.chat.username
     prompt = ' '.join(context.args)
+
+    conversation_history = reduce_conversation_history(conversation_history)
 
     # use the conversation history as prompt
     prompt = f"{conversation_history}{username}: {prompt}\n"
