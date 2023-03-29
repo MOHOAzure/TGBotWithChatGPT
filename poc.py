@@ -1,55 +1,46 @@
 import openai
 import os
-
-# Set the API key
 openai.api_key = os.getenv("OPENAI_API_KEY")
-
-# Choose a model
-MODEL_ENGINE = "text-davinci-003"
-
-# Set the initial prompt to include a personality and habits
-INITIAL_PROMPT = ('''
-    I am a friendly artificial intelligence.
-''')
-conversation_history = INITIAL_PROMPT + "\n"
-
+MODEL_ENGINE = "gpt-4"  # Or "gpt-3.5-turbo"
 USERNAME = "USER"
-# AI_NAME = "AI"
 
 
 def get_response(prompt):
     """Returns the response for the given prompt using the OpenAI API."""
-    completions = openai.Completion.create(
-        engine=MODEL_ENGINE,
-        prompt=prompt,
-        max_tokens=1024,
-        temperature=0.7,
+    response = openai.ChatCompletion.create(
+        model=MODEL_ENGINE,
+        temperature=1.2,
+        messages=[
+            {
+                "role": "system",
+                "content": "You are a helpful assistant. Always say ❤️ with response"
+            },
+            {
+                "role": "user",
+                "content": prompt
+            },
+            # {
+            #     "role": "assistant",
+            #     "content": ""
+            # },
+            # {
+            #     "role": "user",
+            #     "content": "Next prompt"
+            # }
+        ]
     )
-    return completions.choices[0].text
+    # print(f"response: {response}")
+    return response.choices[0].message.content
 
 
-def handle_input(
-    prompt: str,
-    conversation_history: str,
-    USERNAME: str
-):
-    """Updates the conversation history and generates a response using GPT-3."""
-    # Update the conversation history
-    conversation_history += f"{USERNAME}: {prompt}\n"
+def save_available_models():
+    with open("available_models.txt", "w") as my_file:
+        my_file.write(str(openai.Model.list()))
 
-    # Generate a response using GPT-3
-    message = get_response(conversation_history)
-
-    # Update the conversation history
-    conversation_history += f"{message}\n"
-
-    # Print the response
-    print(f'This is response: {message}')
-
-    return conversation_history
+# save_available_models()
 
 
 while True:
     prompt = input(f"{USERNAME}: ")
-    
-    conversation_history = handle_input(prompt, conversation_history, USERNAME)
+    message = get_response(prompt)
+    print(f"message: {message}")
