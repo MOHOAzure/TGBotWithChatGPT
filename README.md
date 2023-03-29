@@ -9,7 +9,8 @@
     ```sh
     cd /path/to/project_dir # working dir
     pipenv --python # 3.8.10
-    pipenv install
+    pipenv install --dev
+    pipenv shell
     ```
 - Variable Dependencies
   - OPENAI_API_KEY: https://platform.openai.com/account/api-keys
